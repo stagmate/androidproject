@@ -75,11 +75,15 @@ def evaluate(client, emb, docs, queries, chunk_cfg, modes=("dense",), tag="", qc
             if qcache is not None:
                 qcache[key] = qvecs
         for mode in modes:
-            m, route = (mode, False) if mode != "hybrid+route" else ("hybrid", True)
+            # mode strings: "<base>[@w<bm25 weight>][+route]", e.g. "hybrid@w0.3+route"
+            route = mode.endswith("+route")
+            base = mode.removesuffix("+route")
+            m, _, w = base.partition("@w")
+            w = float(w) if w else None
             ranked, lat = [], []
             for qt, qv in zip(qtexts, qvecs):
                 t0 = time.perf_counter()
-                hits = retr.search(qt, k=10, mode=m, route=route, qvec=qv)
+                hits = retr.search(qt, k=10, mode=m, route=route, qvec=qv, bm25_weight=w)
                 lat.append((time.perf_counter() - t0) * 1000)
                 ranked.append([h.doc_id for h in hits])
             r = metrics(ranked, [q["gold"] for q in queries])
@@ -107,6 +111,8 @@ def main():
     ap.add_argument("--docs", type=int, default=4000)
     ap.add_argument("--queries", type=int, default=400)
     ap.add_argument("--only", choices=["A", "B", "C"], action="append")
+    ap.add_argument("--modes", default="dense,bm25,hybrid,dense+route,hybrid+route,hybrid@w0.5+route,hybrid@w0.3+route",
+                    help="comma-separated retrieval modes for experiment C")
     a = ap.parse_args()
     cfg = load_config()
     RES.mkdir(exist_ok=True)
@@ -160,7 +166,7 @@ def main():
 
     if "C" in only:
         print(f"\n== C. retrieval modes ({best}) ==")
-        rows = evaluate(client, emb, docs, queries, base_chunk, ("dense", "bm25", "hybrid", "hybrid+route"),
+        rows = evaluate(client, emb, docs, queries, base_chunk, tuple(a.modes.split(",")),
                         tag="192 tok header", qcache=qcache)
         out["C"] = rows
         (RES / "retrieval_modes.md").write_text(

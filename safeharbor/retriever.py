@@ -66,10 +66,11 @@ class Hit:
 
 class Retriever:
     def __init__(self, collection, embedder, rrf_k: int = 60, candidate_pool: int = 50,
-                 build_bm25: bool = True):
+                 build_bm25: bool = True, bm25_weight: float = 1.0):
         self.col = collection
         self.emb = embedder
         self.rrf_k = rrf_k
+        self.bm25_weight = bm25_weight  # weighted RRF: BM25 is a weaker ranker here, so it should vote less
         self.pool = candidate_pool
         self._ids: list[str] = []
         self._docs: list[str] = []
@@ -111,10 +112,12 @@ class Retriever:
 
     # -- public ----------------------------------------------------------------
     def search(self, query: str, k: int = 5, mode: str = "hybrid", where: dict | None = None,
-               route: bool = False, collapse_docs: bool = True, qvec: np.ndarray | None = None) -> list[Hit]:
+               route: bool = False, collapse_docs: bool = True, qvec: np.ndarray | None = None,
+               bm25_weight: float | None = None) -> list[Hit]:
         """Return the top-k hits. ``route=True`` boosts chunks whose section matches the
         question intent (a soft prior, never a hard filter, so a mis-route cannot zero recall)."""
         pool = max(self.pool, k * 4)
+        w_bm25 = self.bm25_weight if bm25_weight is None else bm25_weight
         by_id: dict[str, Hit] = {}
         fused: dict[str, float] = {}
 
@@ -132,7 +135,7 @@ class Retriever:
                     by_id[cid] = Hit(cid, self._metas[i].get("doc_id", cid.split("::")[0]), self._docs[i],
                                      self._metas[i], 0.0, {})
                 by_id[cid].sources["bm25"] = rank + 1
-                fused[cid] = fused.get(cid, 0.0) + (1.0 / (self.rrf_k + rank + 1) if mode == "hybrid" else s)
+                fused[cid] = fused.get(cid, 0.0) + (w_bm25 / (self.rrf_k + rank + 1) if mode == "hybrid" else s)
 
         if route:
             sec = route_section(query)
