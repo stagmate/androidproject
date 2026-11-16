@@ -10,7 +10,7 @@
                          │        ▼                                                                   M=32, efC=200)  │
                          │   PHI vault (SQLite) ◄──── re-identify for authorised viewer only          │               │
                          │                                                                           ▼               │
-                         │                                         Retriever: dense ⊕ BM25 ─► RRF ─► section prior   │
+                         │                                         Retriever: dense + section prior (opt. 0.3·BM25 RRF) │
                          │                                                                           │               │
                          │        Yankee AI agent ◄── MCP (stdio) / HTTP 127.0.0.1 ◄── SafeHarborTools ◄──────┘        │
                          │        (local LLM)            search_medical_knowledge · search_patient_notes · get_document │
