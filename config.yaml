@@ -1,0 +1,31 @@
+# SafeHarbor-RAG configuration. Every path is local; nothing here points at a remote service.
+paths:
+  chroma_dir: data/chroma          # persistent Chroma DB (the shipped vector database)
+  raw_dir: data/raw                # MedQuAD snapshot + synthetic notes (JSONL)
+  phi_vault: data/phi_vault.sqlite # re-identification map; never leaves the machine, never shown to the LLM
+
+embedding:
+  # Chosen from the benchmark in results/embedding_benchmark.md
+  model: BAAI/bge-small-en-v1.5
+  batch_size: 64
+  normalize: true
+
+chunking:
+  max_tokens: 192      # measured in the embedding model's own tokenizer
+  overlap_sentences: 1
+  header: true         # prepend "Topic | Section" to every chunk
+
+hnsw:
+  space: cosine
+  max_neighbors: 32    # "M"
+  ef_construction: 200
+  ef_search: 64
+
+retrieval:
+  mode: hybrid         # dense | bm25 | hybrid
+  rrf_k: 60
+  candidate_pool: 50
+  top_k: 5
+
+privacy:
+  airgap: true         # block all non-loopback sockets after models are loaded

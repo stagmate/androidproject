@@ -1,0 +1,12 @@
+# CPU-only torch keeps the install small and fully local:
+#   pip install torch --index-url https://download.pytorch.org/whl/cpu
+chromadb>=1.0,<2
+sentence-transformers>=3.0
+rank-bm25>=0.2.2
+datasets>=2.18
+fastapi>=0.110
+uvicorn>=0.29
+pyyaml>=6.0
+tqdm>=4.66
+mcp>=1.2
+pytest>=8.0
