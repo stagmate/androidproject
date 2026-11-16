@@ -34,6 +34,9 @@ TOOL_SCHEMAS = [
                 "k": {"type": "integer", "default": 5, "minimum": 1, "maximum": 20},
                 "section": {"type": "string", "enum": SECTIONS,
                             "description": "Optional hard filter on the knowledge section."},
+                "exact_terms": {"type": "boolean", "default": False,
+                                "description": ("Set true when the query hinges on exact tokens (gene "
+                                                "symbols like CFTR, drug names, codes): adds BM25 to dense.")},
             },
             "required": ["query"],
         },
@@ -75,9 +78,12 @@ class SafeHarborTools:
         self.emb = LocalEmbedder(self.cfg["embedding"]["model"], batch_size=self.cfg["embedding"]["batch_size"])
         self.client = get_client(self.cfg["paths"]["chroma_dir"])
         r = self.cfg["retrieval"]
-        self.kb = Retriever(self.client.get_collection("medical_kb"), self.emb, r["rrf_k"], r["candidate_pool"])
+        self.kb = Retriever(self.client.get_collection("medical_kb"), self.emb, r["rrf_k"], r["candidate_pool"],
+                            bm25_weight=r.get("bm25_weight", 1.0))
         self.notes = Retriever(self.client.get_collection("patient_notes"), self.emb, r["rrf_k"], r["candidate_pool"])
         self.mode = r["mode"]
+        self.exact_mode = r.get("exact_mode", "hybrid")
+        self.route = r.get("route", True)
         # Models + index are now in memory; from here on nothing needs the network.
         if airgap if airgap is not None else self.cfg["privacy"]["airgap"]:
             enable_airgap()
@@ -87,13 +93,16 @@ class SafeHarborTools:
         return [t["name"] for t in TOOL_SCHEMAS]
 
     # ------------------------------------------------------------------ tools
-    def search_medical_knowledge(self, query: str, k: int = 5, section: str | None = None) -> dict:
+    def search_medical_knowledge(self, query: str, k: int = 5, section: str | None = None,
+                                 exact_terms: bool = False) -> dict:
         t0 = time.perf_counter()
         where = {"section": section} if section else None
-        hits = self.kb.search(query, k=k, mode=self.mode, where=where, route=section is None)
+        mode = self.exact_mode if exact_terms else self.mode
+        hits = self.kb.search(query, k=k, mode=mode, where=where, route=self.route and section is None)
         return {
             "query": query,
             "routed_section": None if section else route_section(query),
+            "retrieval_mode": mode,
             "results": [self._fmt(h) for h in hits],
             "latency_ms": round((time.perf_counter() - t0) * 1000, 1),
         }

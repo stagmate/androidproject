@@ -31,10 +31,11 @@ mcp = FastMCP("safeharbor-chroma")
 
 
 @mcp.tool()
-def search_medical_knowledge(query: str, k: int = 5, section: str | None = None) -> str:
+def search_medical_knowledge(query: str, k: int = 5, section: str | None = None, exact_terms: bool = False) -> str:
     """Search the local NIH-derived medical knowledge base. Optional section filter: symptoms,
-    treatment, causes, inheritance, genetic changes, exams and tests, outlook, prevention, ..."""
-    return json.dumps(tools.search_medical_knowledge(query, k, section))
+    treatment, causes, inheritance, genetic changes, exams and tests, outlook, prevention, ...
+    Set exact_terms=true when the query hinges on gene symbols, drug names or codes."""
+    return json.dumps(tools.search_medical_knowledge(query, k, section, exact_terms))
 
 
 @mcp.tool()

@@ -22,7 +22,10 @@ hnsw:
   ef_search: 64
 
 retrieval:
-  mode: hybrid         # dense | bm25 | hybrid
+  mode: dense          # dense | bm25 | hybrid  (dense + section router won experiment C)
+  route: true          # soft section prior from the question intent
+  exact_mode: hybrid   # used when the agent sets exact_terms=true (gene symbols, drug codes)
+  bm25_weight: 0.3     # weighted RRF for exact_mode
   rrf_k: 60
   candidate_pool: 50
   top_k: 5
