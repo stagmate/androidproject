@@ -4,7 +4,7 @@
                          ┌──────────────────────── LOCAL MACHINE (airgapped at query time) ────────────────────────┐
                          │                                                                                          │
   MedQuAD (NIH, public)──┼─► normalise + dedupe ─┐                                                                  │
-                         │                       ├─► sentence-packed chunking ─► bge-small-en-v1.5 ─► Chroma DB     │
+                         │                       ├─► sentence-packed chunking ─► e5-small-v2 ─────► Chroma DB     │
   EHR notes (PHI) ───────┼─► PHI redaction ──────┘    (tokenizer-exact,         (CPU, 384-d,        (persistent,     │
                          │        │                    contextual header)         L2-normalised)      HNSW cosine,    │
                          │        ▼                                                                   M=32, efC=200)  │
