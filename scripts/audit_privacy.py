@@ -55,9 +55,9 @@ def main():
         except EgressBlocked:
             report["egress_blocked"] = True
 
-        from safeharbor.store import get_client
+        from safeharbor.store import get_all, get_client
         col = get_client(cfg["paths"]["chroma_dir"]).get_collection("patient_notes")
-        got = col.get(include=["documents", "metadatas"])
+        got = get_all(col, ["documents", "metadatas"])
         blob = "\n".join(got["documents"]) + "\n" + json.dumps(got["metadatas"])
         leaks = {}
         for k, values in truth.items():

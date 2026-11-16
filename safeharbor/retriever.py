@@ -83,7 +83,9 @@ class Retriever:
     def _build_bm25(self):
         from rank_bm25 import BM25Okapi
 
-        got = self.col.get(include=["documents", "metadatas"])
+        from .store import get_all
+
+        got = get_all(self.col, ["documents", "metadatas"])
         self._ids, self._docs, self._metas = got["ids"], got["documents"], got["metadatas"]
         self._pos = {cid: i for i, cid in enumerate(self._ids)}
         self._meta_cols: dict[str, np.ndarray] = {}

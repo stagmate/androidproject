@@ -1,0 +1,49 @@
+{
+  "egress_blocked": true,
+  "phi_leakage": {
+    "name": {
+      "identifiers": 210,
+      "leaked": 0,
+      "examples": []
+    },
+    "contact": {
+      "identifiers": 202,
+      "leaked": 0,
+      "examples": []
+    },
+    "dob": {
+      "identifiers": 297,
+      "leaked": 0,
+      "examples": []
+    },
+    "mrn": {
+      "identifiers": 300,
+      "leaked": 0,
+      "examples": []
+    },
+    "phone": {
+      "identifiers": 300,
+      "leaked": 0,
+      "examples": []
+    },
+    "address": {
+      "identifiers": 299,
+      "leaked": 0,
+      "examples": []
+    },
+    "zip": {
+      "identifiers": 300,
+      "leaked": 0,
+      "examples": []
+    },
+    "visit_date": {
+      "identifiers": 191,
+      "leaked": 0,
+      "examples": []
+    }
+  },
+  "total_identifiers": 2099,
+  "total_leaked": 0,
+  "reidentification_exact": "300/300",
+  "chroma_telemetry": "False"
+}

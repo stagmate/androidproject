@@ -40,6 +40,15 @@ def log(step: str, msg: str):
     print(f"\033[36m[{step}]\033[0m {msg}", flush=True)
 
 
+def _norm(t: str) -> set[str]:
+    return {w for w in re.findall(r"[a-z0-9]+", t.lower()) if w not in {"disease", "the", "of", "s"}}
+
+
+def _same_topic(condition: str, topic: str | None) -> bool:
+    a, b = _norm(condition), _norm(topic or "")
+    return bool(a) and a <= b
+
+
 # --------------------------------------------------------------------------- deterministic planner
 def planner_run(tools: SafeHarborTools, question: str, reidentify: bool = False) -> str:
     log("plan", "1) find relevant patient notes  2) extract their conditions  "
@@ -58,13 +67,18 @@ def planner_run(tools: SafeHarborTools, question: str, reidentify: bool = False)
     lines.append("\nGuidance from local medical knowledge base:")
     for cond, ids in list(conditions.items())[:4]:
         for section in ("treatment", "complications"):
-            kb = tools.search_medical_knowledge(f"{section} of {cond}", k=1)
+            kb = tools.search_medical_knowledge(f"{section} of {cond}", k=5)
+            # Grounding check: only cite evidence about *this* condition. Nearest neighbours of a
+            # missing section are often other diseases' pages, which must never be cited.
+            on_topic = [h for h in kb["results"] if _same_topic(cond, h["topic"])]
+            pick = next((h for h in on_topic if h["section"] == section), None)
             log("tool", f"search_medical_knowledge('{section} of {cond}') -> "
-                        f"{kb['results'][0]['topic'] if kb['results'] else 'none'} / "
-                        f"{kb['results'][0]['section'] if kb['results'] else ''} in {kb['latency_ms']} ms")
-            if kb["results"]:
-                h = kb["results"][0]
-                lines.append(f"- {cond} - {h['section']} [{h['doc_id']}]: {textwrap.shorten(h['text'], 260)}")
+                        f"{len(kb['results'])} hits, {len(on_topic)} on-topic, "
+                        f"{'cited ' + pick['doc_id'] if pick else 'NOT COVERED'} in {kb['latency_ms']} ms")
+            if pick:
+                lines.append(f"- {cond} - {section} [{pick['doc_id']}]: {textwrap.shorten(pick['text'], 260)}")
+            else:
+                lines.append(f"- {cond} - {section}: not covered by the local knowledge base (no citation).")
 
     answer = "Patient brief (de-identified):\n" + "\n".join(lines)
     if reidentify:

@@ -25,7 +25,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from safeharbor.config import ROOT, load_config  # noqa: E402
 from safeharbor.evaluation import pct  # noqa: E402
-from safeharbor.store import create_collection, dir_size_mb, get_client, ingest, set_ef_search  # noqa: E402
+from safeharbor.store import create_collection, dir_size_mb, get_all, get_client, ingest  # noqa: E402
 
 
 def main():
@@ -34,7 +34,7 @@ def main():
     a = ap.parse_args()
     cfg = load_config()
     src = get_client(cfg["paths"]["chroma_dir"]).get_collection("medical_kb")
-    got = src.get(include=["embeddings", "documents", "metadatas"])
+    got = get_all(src, ["embeddings", "documents", "metadatas"])
     ids, X = got["ids"], np.asarray(got["embeddings"], dtype=np.float32)
     docs, metas = got["documents"], got["metadatas"]
     print(f"vectors: {X.shape}")
@@ -55,18 +55,20 @@ def main():
     rows = [{"M": "exact", "ef_construction": "-", "ef_search": "-", "recall@10": 1.0,
              "p50_ms": round(pct(t, 50), 2), "p95_ms": round(pct(t, 95), 2), "build_s": 0, "disk_mb": "-"}]
 
+    # NOTE: ef_search is fixed at collection creation. In Chroma 1.x, collection.modify(ef_search=...)
+    # updates the stored configuration but did NOT change recall on an index already loaded in
+    # memory in our tests, so each (M, ef_construction, ef_search) point gets its own fresh build.
     for M, efc in [(8, 100), (16, 100), (16, 200), (32, 200), (48, 400)]:
-        tmp = tempfile.mkdtemp(prefix="hnsw_")
-        client = get_client(tmp)
-        col = create_collection(client, "hnsw-bench", {"space": "cosine", "max_neighbors": M,
-                                                       "ef_construction": efc, "ef_search": 10})
-        t0 = time.perf_counter()
-        ingest(col, ids, docs, metas, X)
-        col.count()
-        build = time.perf_counter() - t0
-        size = dir_size_mb(tmp)
         for ef in (10, 32, 64, 128, 256):
-            set_ef_search(col, ef)
+            tmp = tempfile.mkdtemp(prefix="hnsw_")
+            client = get_client(tmp)
+            col = create_collection(client, "hnsw-bench", {"space": "cosine", "max_neighbors": M,
+                                                           "ef_construction": efc, "ef_search": ef})
+            t0 = time.perf_counter()
+            ingest(col, ids, docs, metas, X)
+            col.count()
+            build = time.perf_counter() - t0
+            size = dir_size_mb(tmp)
             col.query(query_embeddings=Q[:5].tolist(), n_results=10)  # warm
             lat, rec = [], []
             for q, ex in zip(Q, exact_ids):
@@ -79,8 +81,8 @@ def main():
                    "build_s": round(build, 1), "disk_mb": round(size, 1)}
             rows.append(row)
             print(row, flush=True)
-        del col, client
-        shutil.rmtree(tmp, ignore_errors=True)
+            del col, client
+            shutil.rmtree(tmp, ignore_errors=True)
 
     res = ROOT / "results"
     res.mkdir(exist_ok=True)

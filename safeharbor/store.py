@@ -43,6 +43,10 @@ def create_collection(client, name: str, hnsw: dict, metadata: dict | None = Non
 
 
 def set_ef_search(collection, ef: int) -> None:
+    """Persist a new ef_search in the collection configuration.
+
+    Caveat (measured in scripts/benchmark_hnsw.py): on Chroma 1.x this did not change recall for an
+    index already loaded in this process; set ef_search at creation time, or reopen the DB."""
     collection.modify(configuration={"hnsw": {"ef_search": int(ef)}})
 
 
@@ -68,3 +72,19 @@ def ingest(collection, ids: list[str], texts: list[str], metas: list[dict], embe
 
 def dir_size_mb(path: str | Path) -> float:
     return sum(f.stat().st_size for f in Path(path).rglob("*") if f.is_file()) / 1e6
+
+
+def get_all(collection, include: list[str], page: int = 5000) -> dict:
+    """``collection.get()`` in pages: a single unpaged get over ~35k rows exceeds SQLite's
+    bound-variable limit inside Chroma ("too many SQL variables")."""
+    out: dict = {"ids": [], **{k: [] for k in include}}
+    offset = 0
+    while True:
+        got = collection.get(include=include, limit=page, offset=offset)
+        if not got["ids"]:
+            break
+        out["ids"].extend(got["ids"])
+        for k in include:
+            out[k].extend(list(got[k]))
+        offset += len(got["ids"])
+    return out
