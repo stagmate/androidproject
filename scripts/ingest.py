@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import shutil
 import sys
 import time
 from pathlib import Path
@@ -31,6 +32,9 @@ def build(cfg: dict, limit: int | None, n_notes: int) -> dict:
     paths, ecfg, ccfg = cfg["paths"], cfg["embedding"], cfg["chunking"]
     emb = LocalEmbedder(ecfg["model"], batch_size=ecfg["batch_size"], normalize=ecfg["normalize"])
     count = make_token_counter(emb.tokenizer)
+    # Full rebuild into an empty directory: Chroma's delete_collection() leaves orphaned segment
+    # folders and an un-vacuumed SQLite file behind, which would bloat the shipped database.
+    shutil.rmtree(paths["chroma_dir"], ignore_errors=True)
     client = get_client(paths["chroma_dir"])
     manifest = {"embedding_model": ecfg["model"], "chunking": ccfg, "hnsw": cfg["hnsw"], "collections": {}}
 
