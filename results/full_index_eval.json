@@ -1,0 +1,764 @@
+{
+  "canonical": {
+    "recall@1": 0.884,
+    "recall@5": 0.948,
+    "recall@10": 0.95,
+    "mrr@10": 0.9134190476190477,
+    "p50_ms": 19.71,
+    "p95_ms": 28.44
+  },
+  "paraphrase": {
+    "recall@1": 0.862,
+    "recall@5": 0.968,
+    "recall@10": 0.98,
+    "mrr@10": 0.9111103174603175,
+    "p50_ms": 18.86,
+    "p95_ms": 27.29
+  },
+  "failure_breakdown": {
+    "canonical": {
+      "wrong topic": 25
+    },
+    "paraphrase": {
+      "wrong topic": 9,
+      "right topic, wrong section": 1
+    }
+  },
+  "failures": [
+    {
+      "variant": "canonical",
+      "query": "is childhood myocerebrohepatopathy spectrum inherited ?",
+      "section": "inheritance",
+      "gold_topic": "Nijmegen breakage syndrome",
+      "top3": [
+        [
+          "childhood myocerebrohepatopathy spectrum",
+          "frequency"
+        ],
+        [
+          "childhood myocerebrohepatopathy spectrum",
+          "information"
+        ],
+        [
+          "Myoclonic epilepsy with ragged red fibers",
+          "inheritance"
+        ]
+      ],
+      "why": "wrong topic"
+    },
+    {
+      "variant": "canonical",
+      "query": "is spondyloepimetaphyseal dysplasia, strudwick type inherited ?",
+      "section": "inheritance",
+      "gold_topic": "congenital stromal corneal dystrophy",
+      "top3": [
+        [
+          "spondyloepimetaphyseal dysplasia, Strudwick type",
+          "information"
+        ],
+        [
+          "spondyloepimetaphyseal dysplasia, Strudwick type",
+          "genetic changes"
+        ],
+        [
+          "spondyloepimetaphyseal dysplasia, Strudwick type",
+          "frequency"
+        ]
+      ],
+      "why": "wrong topic"
+    },
+    {
+      "variant": "canonical",
+      "query": "is fraser syndrome inherited ?",
+      "section": "inheritance",
+      "gold_topic": "Nijmegen breakage syndrome",
+      "top3": [
+        [
+          "Gordon syndrome",
+          "inheritance"
+        ],
+        [
+          "Townes-Brocks syndrome",
+          "inheritance"
+        ],
+        [
+          "Fraser syndrome",
+          "information"
+        ]
+      ],
+      "why": "wrong topic"
+    },
+    {
+      "variant": "canonical",
+      "query": "is ankyloblepharon-ectodermal defects-cleft lip/palate syndrome inherited ?",
+      "section": "inheritance",
+      "gold_topic": "congenital stromal corneal dystrophy",
+      "top3": [
+        [
+          "ankyloblepharon-ectodermal defects-cleft lip/palate syndrome",
+          "information"
+        ],
+        [
+          "ankyloblepharon-ectodermal defects-cleft lip/palate syndrome",
+          "frequency"
+        ],
+        [
+          "ankyloblepharon-ectodermal defects-cleft lip/palate syndrome",
+          "genetic changes"
+        ]
+      ],
+      "why": "wrong topic"
+    },
+    {
+      "variant": "canonical",
+      "query": "what are the treatments for megdel syndrome ?",
+      "section": "treatment",
+      "gold_topic": "MEGDEL syndrome",
+      "top3": [
+        [
+          "SCOT deficiency",
+          "treatment"
+        ],
+        [
+          "Weill-Marchesani syndrome",
+          "treatment"
+        ],
+        [
+          "Ataxia Telangiectasia",
+          "treatment"
+        ]
+      ],
+      "why": "wrong topic"
+    },
+    {
+      "variant": "canonical",
+      "query": "is mevalonate kinase deficiency inherited ?",
+      "section": "inheritance",
+      "gold_topic": "Nijmegen breakage syndrome",
+      "top3": [
+        [
+          "deoxyguanosine kinase deficiency",
+          "inheritance"
+        ],
+        [
+          "mevalonate kinase deficiency",
+          "genetic changes"
+        ],
+        [
+          "Mevalonic aciduria",
+          "information"
+        ]
+      ],
+      "why": "wrong topic"
+    },
+    {
+      "variant": "canonical",
+      "query": "is juvenile primary osteoporosis inherited ?",
+      "section": "inheritance",
+      "gold_topic": "congenital stromal corneal dystrophy",
+      "top3": [
+        [
+          "juvenile primary osteoporosis",
+          "information"
+        ],
+        [
+          "osteoporosis-pseudoglioma syndrome",
+          "inheritance"
+        ],
+        [
+          "Juvenile osteoporosis",
+          "information"
+        ]
+      ],
+      "why": "wrong topic"
+    },
+    {
+      "variant": "canonical",
+      "query": "is alg12-congenital disorder of glycosylation inherited ?",
+      "section": "inheritance",
+      "gold_topic": "Nijmegen breakage syndrome",
+      "top3": [
+        [
+          "ALG12-congenital disorder of glycosylation",
+          "information"
+        ],
+        [
+          "ALG12-congenital disorder of glycosylation",
+          "frequency"
+        ],
+        [
+          "ALG12-congenital disorder of glycosylation",
+          "genetic changes"
+        ]
+      ],
+      "why": "wrong topic"
+    },
+    {
+      "variant": "canonical",
+      "query": "what is the outlook for glossopharyngeal neuralgia ?",
+      "section": "outlook",
+      "gold_topic": "Glossopharyngeal Neuralgia",
+      "top3": [
+        [
+          "Syndactyly type 9",
+          "symptoms"
+        ],
+        [
+          "Hydrocephalus, costovertebral dysplasia, and Sprengel anomaly",
+          "symptoms"
+        ],
+        [
+          "Symphalangism, distal, with microdontia, dental pulp stones, and narrowed zygomatic arch",
+          "symptoms"
+        ]
+      ],
+      "why": "wrong topic"
+    },
+    {
+      "variant": "canonical",
+      "query": "what research (or clinical trials) is being done for intraocular (uveal) melanoma ?",
+      "section": "research",
+      "gold_topic": "Hypopharyngeal Cancer",
+      "top3": [
+        [
+          "Intraocular (Uveal) Melanoma",
+          "treatment"
+        ],
+        [
+          "Skin Cancer",
+          "research"
+        ],
+        [
+          "Melanoma",
+          "research"
+        ]
+      ],
+      "why": "wrong topic"
+    },
+    {
+      "variant": "canonical",
+      "query": "is arginine:glycine amidinotransferase deficiency inherited ?",
+      "section": "inheritance",
+      "gold_topic": "Nijmegen breakage syndrome",
+      "top3": [
+        [
+          "arginine:glycine amidinotransferase deficiency",
+          "information"
+        ],
+        [
+          "arginine:glycine amidinotransferase deficiency",
+          "frequency"
+        ],
+        [
+          "arginine:glycine amidinotransferase deficiency",
+          "genetic changes"
+        ]
+      ],
+      "why": "wrong topic"
+    },
+    {
+      "variant": "canonical",
+      "query": "is pyridoxal 5'-phosphate-dependent epilepsy inherited ?",
+      "section": "inheritance",
+      "gold_topic": "Nijmegen breakage syndrome",
+      "top3": [
+        [
+          "pyridoxal 5'-phosphate-dependent epilepsy",
+          "information"
+        ],
+        [
+          "pyridoxal 5'-phosphate-dependent epilepsy",
+          "frequency"
+        ],
+        [
+          "pyridoxal 5'-phosphate-dependent epilepsy",
+          "genetic changes"
+        ]
+      ],
+      "why": "wrong topic"
+    },
+    {
+      "variant": "canonical",
+      "query": "what research (or clinical trials) is being done for mycosis fungoides and the szary syndrome ?",
+      "section": "research",
+      "gold_topic": "Adult Soft Tissue Sarcoma",
+      "top3": [
+        [
+          "Mycosis Fungoides and the Szary Syndrome",
+          "treatment"
+        ],
+        [
+          "Mycosis Fungoides and the Szary Syndrome",
+          "information"
+        ],
+        [
+          "mycosis fungoides",
+          "treatment"
+        ]
+      ],
+      "why": "wrong topic"
+    },
+    {
+      "variant": "canonical",
+      "query": "is hyperphosphatemic familial tumoral calcinosis inherited ?",
+      "section": "inheritance",
+      "gold_topic": "Nijmegen breakage syndrome",
+      "top3": [
+        [
+          "hyperphosphatemic familial tumoral calcinosis",
+          "information"
+        ],
+        [
+          "hyperphosphatemic familial tumoral calcinosis",
+          "treatment"
+        ],
+        [
+          "hyperphosphatemic familial tumoral calcinosis",
+          "genetic changes"
+        ]
+      ],
+      "why": "wrong topic"
+    },
+    {
+      "variant": "canonical",
+      "query": "is glanzmann thrombasthenia inherited ?",
+      "section": "inheritance",
+      "gold_topic": "Nijmegen breakage syndrome",
+      "top3": [
+        [
+          "Glanzmann thrombasthenia",
+          "information"
+        ],
+        [
+          "thrombotic thrombocytopenic purpura",
+          "inheritance"
+        ],
+        [
+          "Glanzmann thrombasthenia",
+          "genetic changes"
+        ]
+      ],
+      "why": "wrong topic"
+    },
+    {
+      "variant": "canonical",
+      "query": "do you have information about artificial limbs",
+      "section": "information",
+      "gold_topic": "Artificial Limbs",
+      "top3": [
+        [
+          "congenital contractural arachnodactyly",
+          "treatment"
+        ],
+        [
+          "Peripheral Arterial Disease (P.A.D.)",
+          "research"
+        ],
+        [
+          "Knee Replacement",
+          "information"
+        ]
+      ],
+      "why": "wrong topic"
+    },
+    {
+      "variant": "canonical",
+      "query": "is sitosterolemia inherited ?",
+      "section": "inheritance",
+      "gold_topic": "Nijmegen breakage syndrome",
+      "top3": [
+        [
+          "spondylocarpotarsal synostosis syndrome",
+          "inheritance"
+        ],
+        [
+          "Congenital radio-ulnar synostosis",
+          "inheritance"
+        ],
+        [
+          "steatocystoma multiplex",
+          "inheritance"
+        ]
+      ],
+      "why": "wrong topic"
+    },
+    {
+      "variant": "canonical",
+      "query": "what are the treatments for caffey disease ?",
+      "section": "treatment",
+      "gold_topic": "Caffey disease",
+      "top3": [
+        [
+          "Kyasanur Forest Disease (KFD)",
+          "treatment"
+        ],
+        [
+          "Mastocytic enterocolitis",
+          "treatment"
+        ],
+        [
+          "Nodular nonsuppurative panniculitis",
+          "treatment"
+        ]
+      ],
+      "why": "wrong topic"
+    },
+    {
+      "variant": "canonical",
+      "query": "is sialidosis inherited ?",
+      "section": "inheritance",
+      "gold_topic": "Nijmegen breakage syndrome",
+      "top3": [
+        [
+          "Sialidosis type I",
+          "information"
+        ],
+        [
+          "Galactosialidosis",
+          "inheritance"
+        ],
+        [
+          "sialidosis",
+          "information"
+        ]
+      ],
+      "why": "wrong topic"
+    },
+    {
+      "variant": "canonical",
+      "query": "is irak-4 deficiency inherited ?",
+      "section": "inheritance",
+      "gold_topic": "Nijmegen breakage syndrome",
+      "top3": [
+        [
+          "IRAK-4 deficiency",
+          "information"
+        ],
+        [
+          "IRAK-4 deficiency",
+          "genetic changes"
+        ],
+        [
+          "phosphoglycerate kinase deficiency",
+          "inheritance"
+        ]
+      ],
+      "why": "wrong topic"
+    },
+    {
+      "variant": "canonical",
+      "query": "is dubin-johnson syndrome inherited ?",
+      "section": "inheritance",
+      "gold_topic": "Nijmegen breakage syndrome",
+      "top3": [
+        [
+          "Birt-Hogg-Dub syndrome",
+          "inheritance"
+        ],
+        [
+          "Stevens-Johnson syndrome/toxic epidermal necrolysis",
+          "inheritance"
+        ],
+        [
+          "Dubin-Johnson syndrome",
+          "genetic changes"
+        ]
+      ],
+      "why": "wrong topic"
+    },
+    {
+      "variant": "canonical",
+      "query": "is iron-refractory iron deficiency anemia inherited ?",
+      "section": "inheritance",
+      "gold_topic": "Nijmegen breakage syndrome",
+      "top3": [
+        [
+          "iron-refractory iron deficiency anemia",
+          "information"
+        ],
+        [
+          "Nonspherocytic hemolytic anemia due to hexokinase deficiency",
+          "inheritance"
+        ],
+        [
+          "iron-refractory iron deficiency anemia",
+          "genetic changes"
+        ]
+      ],
+      "why": "wrong topic"
+    },
+    {
+      "variant": "canonical",
+      "query": "is primary ciliary dyskinesia inherited ?",
+      "section": "inheritance",
+      "gold_topic": "Nijmegen breakage syndrome",
+      "top3": [
+        [
+          "Primary Ciliary Dyskinesia",
+          "causes"
+        ],
+        [
+          "Dextrocardia with situs inversus",
+          "inheritance"
+        ],
+        [
+          "primary ciliary dyskinesia",
+          "information"
+        ]
+      ],
+      "why": "wrong topic"
+    },
+    {
+      "variant": "canonical",
+      "query": "is multicentric osteolysis, nodulosis, and arthropathy inherited ?",
+      "section": "inheritance",
+      "gold_topic": "Nijmegen breakage syndrome",
+      "top3": [
+        [
+          "multicentric osteolysis, nodulosis, and arthropathy",
+          "information"
+        ],
+        [
+          "multicentric osteolysis, nodulosis, and arthropathy",
+          "frequency"
+        ],
+        [
+          "osteoporosis-pseudoglioma syndrome",
+          "inheritance"
+        ]
+      ],
+      "why": "wrong topic"
+    },
+    {
+      "variant": "canonical",
+      "query": "do you have information about blood count tests",
+      "section": "information",
+      "gold_topic": "Blood Count Tests",
+      "top3": [
+        [
+          "Hemophilia",
+          "exams and tests"
+        ],
+        [
+          "Thrombotic Thrombocytopenic Purpura",
+          "exams and tests"
+        ],
+        [
+          "Anemia",
+          "exams and tests"
+        ]
+      ],
+      "why": "wrong topic"
+    },
+    {
+      "variant": "paraphrase",
+      "query": "Fraser like syndrome clinical presentation",
+      "section": "symptoms",
+      "gold_topic": "Fraser like syndrome",
+      "top3": [
+        [
+          "Fraser syndrome",
+          "information"
+        ],
+        [
+          "Muir-Torre syndrome",
+          "symptoms"
+        ],
+        [
+          "Galloway-Mowat syndrome",
+          "symptoms"
+        ]
+      ],
+      "why": "wrong topic"
+    },
+    {
+      "variant": "paraphrase",
+      "query": "ongoing clinical trials for Absence of the Septum Pellucidum",
+      "section": "research",
+      "gold_topic": "Absence of the Septum Pellucidum",
+      "top3": [
+        [
+          "Childhood Central Nervous System Atypical Teratoid/Rhabdoid Tumor",
+          "research"
+        ],
+        [
+          "Extragonadal Germ Cell Tumors",
+          "research"
+        ],
+        [
+          "Langerhans Cell Histiocytosis",
+          "research"
+        ]
+      ],
+      "why": "wrong topic"
+    },
+    {
+      "variant": "paraphrase",
+      "query": "Buerger disease clinical presentation",
+      "section": "symptoms",
+      "gold_topic": "Buerger disease",
+      "top3": [
+        [
+          "Neuroblastoma",
+          "symptoms"
+        ],
+        [
+          "Troyer syndrome",
+          "symptoms"
+        ],
+        [
+          "Geroderma osteodysplastica",
+          "symptoms"
+        ]
+      ],
+      "why": "right topic, wrong section"
+    },
+    {
+      "variant": "paraphrase",
+      "query": "prognosis of Glossopharyngeal Neuralgia",
+      "section": "outlook",
+      "gold_topic": "Glossopharyngeal Neuralgia",
+      "top3": [
+        [
+          "Spondyloepimetaphyseal dysplasia x-linked with mental deterioration",
+          "symptoms"
+        ],
+        [
+          "Hydrocephalus, costovertebral dysplasia, and Sprengel anomaly",
+          "symptoms"
+        ],
+        [
+          "Proximal symphalangism",
+          "symptoms"
+        ]
+      ],
+      "why": "wrong topic"
+    },
+    {
+      "variant": "paraphrase",
+      "query": "ongoing clinical trials for Chronic Pain",
+      "section": "research",
+      "gold_topic": "Chronic Pain",
+      "top3": [
+        [
+          "Back Pain",
+          "research"
+        ],
+        [
+          "Adult Hodgkin Lymphoma",
+          "research"
+        ],
+        [
+          "Adult Soft Tissue Sarcoma",
+          "research"
+        ]
+      ],
+      "why": "wrong topic"
+    },
+    {
+      "variant": "paraphrase",
+      "query": "ways to lower the chance of getting (are)",
+      "section": "prevention",
+      "gold_topic": "(are)",
+      "top3": [
+        [
+          "Osteoporosis",
+          "prevention"
+        ],
+        [
+          "Coronary Heart Disease Risk Factors",
+          "prevention"
+        ],
+        [
+          "Prescription and Illicit Drug Abuse",
+          "prevention"
+        ]
+      ],
+      "why": "wrong topic"
+    },
+    {
+      "variant": "paraphrase",
+      "query": "overview of Artificial Limbs",
+      "section": "information",
+      "gold_topic": "Artificial Limbs",
+      "top3": [
+        [
+          "Miller syndrome",
+          "genetic changes"
+        ],
+        [
+          "Anophthalmos with limb anomalies",
+          "symptoms"
+        ],
+        [
+          "Congenital contractural arachnodactyly",
+          "information"
+        ]
+      ],
+      "why": "wrong topic"
+    },
+    {
+      "variant": "paraphrase",
+      "query": "how would I know if someone has Spermatogenesis arrest",
+      "section": "symptoms",
+      "gold_topic": "Spermatogenesis arrest",
+      "top3": [
+        [
+          "Primary Ciliary Dyskinesia",
+          "exams and tests"
+        ],
+        [
+          "Fanconi Anemia",
+          "exams and tests"
+        ],
+        [
+          "Prothrombin thrombophilia",
+          "exams and tests"
+        ]
+      ],
+      "why": "wrong topic"
+    },
+    {
+      "variant": "paraphrase",
+      "query": "Battaglia-Neri syndrome clinical presentation",
+      "section": "symptoms",
+      "gold_topic": "Battaglia-Neri syndrome",
+      "top3": [
+        [
+          "Neuroblastoma",
+          "symptoms"
+        ],
+        [
+          "Tranebjaerg Svejgaard syndrome",
+          "symptoms"
+        ],
+        [
+          "Nicolaides-Baraitser syndrome",
+          "symptoms"
+        ]
+      ],
+      "why": "wrong topic"
+    },
+    {
+      "variant": "paraphrase",
+      "query": "explain Blood Count Tests",
+      "section": "information",
+      "gold_topic": "Blood Count Tests",
+      "top3": [
+        [
+          "Nasopharyngeal Cancer",
+          "exams and tests"
+        ],
+        [
+          "Langerhans Cell Histiocytosis",
+          "exams and tests"
+        ],
+        [
+          "Wilms Tumor and Other Childhood Kidney Tumors",
+          "exams and tests"
+        ]
+      ],
+      "why": "wrong topic"
+    }
+  ]
+}

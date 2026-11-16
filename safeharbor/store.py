@@ -45,8 +45,8 @@ def create_collection(client, name: str, hnsw: dict, metadata: dict | None = Non
 def set_ef_search(collection, ef: int) -> None:
     """Persist a new ef_search in the collection configuration.
 
-    Caveat (measured in scripts/benchmark_hnsw.py): on Chroma 1.x this did not change recall for an
-    index already loaded in this process; set ef_search at creation time, or reopen the DB."""
+    Measured on Chroma 1.5: the new value is persisted and takes effect when the DB is next opened
+    (fresh process), but NOT for an index already loaded in the current process. No rebuild needed."""
     collection.modify(configuration={"hnsw": {"ef_search": int(ef)}})
 
 

@@ -55,9 +55,9 @@ def main():
     rows = [{"M": "exact", "ef_construction": "-", "ef_search": "-", "recall@10": 1.0,
              "p50_ms": round(pct(t, 50), 2), "p95_ms": round(pct(t, 95), 2), "build_s": 0, "disk_mb": "-"}]
 
-    # NOTE: ef_search is fixed at collection creation. In Chroma 1.x, collection.modify(ef_search=...)
-    # updates the stored configuration but did NOT change recall on an index already loaded in
-    # memory in our tests, so each (M, ef_construction, ef_search) point gets its own fresh build.
+    # NOTE: in Chroma 1.5, collection.modify(ef_search=...) is persisted but only applies once the DB
+    # is reopened in a new process; it does not change an index already loaded in memory. To keep
+    # the sweep in one process, each (M, ef_construction, ef_search) point gets its own fresh build.
     for M, efc in [(8, 100), (16, 100), (16, 200), (32, 200), (48, 400)]:
         for ef in (10, 32, 64, 128, 256):
             tmp = tempfile.mkdtemp(prefix="hnsw_")

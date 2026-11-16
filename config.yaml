@@ -19,7 +19,7 @@ hnsw:
   space: cosine
   max_neighbors: 32    # "M"
   ef_construction: 200
-  ef_search: 64
+  ef_search: 128      # sweep: 0.994 ANN recall@10 at ~1.35 ms (results/hnsw_benchmark.md)
 
 retrieval:
   mode: dense          # dense | bm25 | hybrid  (dense + section router won experiment C)

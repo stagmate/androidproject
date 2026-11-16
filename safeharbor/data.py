@@ -94,12 +94,17 @@ def load_medquad(raw_dir: str | Path, refresh: bool = False) -> tuple[list[dict]
             ans = re.sub(r"\s+", " ", (r["answer"] or "")).strip()
             if len(ans) < 40:
                 continue
-            did = _doc_id(ans)
             q = normalise_question(r["question"])
+            topic = extract_topic(q)
+            # Dedupe on (answer, topic), NOT answer alone: NIH reuses boilerplate paragraphs verbatim
+            # across diseases (e.g. the generic autosomal-recessive inheritance text). Merging those
+            # would label one shared chunk with a single, arbitrary disease and make every other
+            # disease's question unanswerable (see results/full_index_eval.md, v1 failure analysis).
+            did = _doc_id(topic.lower() + "\x00" + ans)
             if did not in docs:
                 docs[did] = {
                     "doc_id": did,
-                    "topic": extract_topic(q),
+                    "topic": topic,
                     "section": r["qtype"],
                     "source": "MedQuAD/NIH",
                     "collection": "medical_kb",
