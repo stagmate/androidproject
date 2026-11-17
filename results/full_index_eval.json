@@ -1,72 +1,29 @@
 {
   "canonical": {
-    "recall@1": 0.928,
-    "recall@5": 0.992,
-    "recall@10": 0.994,
-    "mrr@10": 0.9569857142857142,
-    "p50_ms": 22.73,
-    "p95_ms": 37.03
+    "recall@1": 0.932,
+    "recall@5": 0.996,
+    "recall@10": 0.998,
+    "mrr@10": 0.9609857142857142,
+    "p50_ms": 23.91,
+    "p95_ms": 29.38
   },
   "paraphrase": {
-    "recall@1": 0.856,
-    "recall@5": 0.962,
-    "recall@10": 0.974,
-    "mrr@10": 0.9042769841269842,
-    "p50_ms": 20.14,
-    "p95_ms": 30.31
+    "recall@1": 0.876,
+    "recall@5": 0.984,
+    "recall@10": 0.996,
+    "mrr@10": 0.9249436507936508,
+    "p50_ms": 23.23,
+    "p95_ms": 28.87
   },
   "failure_breakdown": {
     "canonical": {
-      "wrong topic": 3
+      "wrong topic": 1
     },
     "paraphrase": {
-      "wrong topic": 11,
-      "right topic, wrong section": 2
+      "wrong topic": 2
     }
   },
   "failures": [
-    {
-      "variant": "canonical",
-      "query": "what are the treatments for megdel syndrome ?",
-      "section": "treatment",
-      "gold_topic": "MEGDEL syndrome",
-      "top3": [
-        [
-          "SCOT deficiency",
-          "treatment"
-        ],
-        [
-          "Weill-Marchesani syndrome",
-          "treatment"
-        ],
-        [
-          "Ataxia Telangiectasia",
-          "treatment"
-        ]
-      ],
-      "why": "wrong topic"
-    },
-    {
-      "variant": "canonical",
-      "query": "what is the outlook for glossopharyngeal neuralgia ?",
-      "section": "outlook",
-      "gold_topic": "Glossopharyngeal Neuralgia",
-      "top3": [
-        [
-          "Syndactyly type 9",
-          "symptoms"
-        ],
-        [
-          "Hydrocephalus, costovertebral dysplasia, and Sprengel anomaly",
-          "symptoms"
-        ],
-        [
-          "Symphalangism, distal, with microdontia, dental pulp stones, and narrowed zygomatic arch",
-          "symptoms"
-        ]
-      ],
-      "why": "wrong topic"
-    },
     {
       "variant": "canonical",
       "query": "do you have information about blood count tests",
@@ -90,153 +47,6 @@
     },
     {
       "variant": "paraphrase",
-      "query": "Fraser like syndrome clinical presentation",
-      "section": "symptoms",
-      "gold_topic": "Fraser like syndrome",
-      "top3": [
-        [
-          "Fraser syndrome",
-          "information"
-        ],
-        [
-          "Muir-Torre syndrome",
-          "symptoms"
-        ],
-        [
-          "Pinheiro Freire-Maia Miranda syndrome",
-          "symptoms"
-        ]
-      ],
-      "why": "wrong topic"
-    },
-    {
-      "variant": "paraphrase",
-      "query": "ongoing clinical trials for Absence of the Septum Pellucidum",
-      "section": "research",
-      "gold_topic": "Absence of the Septum Pellucidum",
-      "top3": [
-        [
-          "Childhood Central Nervous System Atypical Teratoid/Rhabdoid Tumor",
-          "research"
-        ],
-        [
-          "Extragonadal Germ Cell Tumors",
-          "research"
-        ],
-        [
-          "Langerhans Cell Histiocytosis",
-          "research"
-        ]
-      ],
-      "why": "wrong topic"
-    },
-    {
-      "variant": "paraphrase",
-      "query": "how would I know if someone has ICF syndrome",
-      "section": "symptoms",
-      "gold_topic": "ICF syndrome",
-      "top3": [
-        [
-          "Idiopathic Pulmonary Fibrosis",
-          "exams and tests"
-        ],
-        [
-          "Tietz syndrome",
-          "exams and tests"
-        ],
-        [
-          "Idiopathic Pulmonary Fibrosis",
-          "symptoms"
-        ]
-      ],
-      "why": "wrong topic"
-    },
-    {
-      "variant": "paraphrase",
-      "query": "therapy options MEGDEL syndrome",
-      "section": "treatment",
-      "gold_topic": "MEGDEL syndrome",
-      "top3": [
-        [
-          "Multifocal motor neuropathy",
-          "treatment"
-        ],
-        [
-          "Ataxia Telangiectasia",
-          "treatment"
-        ],
-        [
-          "Childhood Acute Lymphoblastic Leukemia",
-          "treatment"
-        ]
-      ],
-      "why": "wrong topic"
-    },
-    {
-      "variant": "paraphrase",
-      "query": "Buerger disease clinical presentation",
-      "section": "symptoms",
-      "gold_topic": "Buerger disease",
-      "top3": [
-        [
-          "Neuroblastoma",
-          "symptoms"
-        ],
-        [
-          "Troyer syndrome",
-          "symptoms"
-        ],
-        [
-          "Geroderma osteodysplastica",
-          "symptoms"
-        ]
-      ],
-      "why": "right topic, wrong section"
-    },
-    {
-      "variant": "paraphrase",
-      "query": "prognosis of Glossopharyngeal Neuralgia",
-      "section": "outlook",
-      "gold_topic": "Glossopharyngeal Neuralgia",
-      "top3": [
-        [
-          "Spondyloepimetaphyseal dysplasia x-linked with mental deterioration",
-          "symptoms"
-        ],
-        [
-          "Hydrocephalus, costovertebral dysplasia, and Sprengel anomaly",
-          "symptoms"
-        ],
-        [
-          "Proximal symphalangism",
-          "symptoms"
-        ]
-      ],
-      "why": "wrong topic"
-    },
-    {
-      "variant": "paraphrase",
-      "query": "therapy options enlarged parietal foramina",
-      "section": "treatment",
-      "gold_topic": "enlarged parietal foramina",
-      "top3": [
-        [
-          "Prostate Enlargement: Benign Prostatic Hyperplasia",
-          "treatment"
-        ],
-        [
-          "Progressive Supranuclear Palsy",
-          "treatment"
-        ],
-        [
-          "Parsonage Turner syndrome",
-          "treatment"
-        ]
-      ],
-      "why": "right topic, wrong section"
-    },
-    {
-      "variant": "paraphrase",
       "query": "ongoing clinical trials for Chronic Pain",
       "section": "research",
       "gold_topic": "Chronic Pain",
@@ -252,90 +62,6 @@
         [
           "Adult Hodgkin Lymphoma",
           "research"
-        ]
-      ],
-      "why": "wrong topic"
-    },
-    {
-      "variant": "paraphrase",
-      "query": "ongoing clinical trials for Herpes Zoster Oticus",
-      "section": "research",
-      "gold_topic": "Herpes Zoster Oticus",
-      "top3": [
-        [
-          "Mycosis Fungoides and the Szary Syndrome",
-          "research"
-        ],
-        [
-          "Extragonadal Germ Cell Tumors",
-          "research"
-        ],
-        [
-          "Childhood Central Nervous System Atypical Teratoid/Rhabdoid Tumor",
-          "research"
-        ]
-      ],
-      "why": "wrong topic"
-    },
-    {
-      "variant": "paraphrase",
-      "query": "overview of Artificial Limbs",
-      "section": "information",
-      "gold_topic": "Artificial Limbs",
-      "top3": [
-        [
-          "Miller syndrome",
-          "genetic changes"
-        ],
-        [
-          "Anophthalmos with limb anomalies",
-          "symptoms"
-        ],
-        [
-          "Congenital contractural arachnodactyly",
-          "information"
-        ]
-      ],
-      "why": "wrong topic"
-    },
-    {
-      "variant": "paraphrase",
-      "query": "how would I know if someone has Spermatogenesis arrest",
-      "section": "symptoms",
-      "gold_topic": "Spermatogenesis arrest",
-      "top3": [
-        [
-          "Primary Ciliary Dyskinesia",
-          "exams and tests"
-        ],
-        [
-          "Fanconi Anemia",
-          "exams and tests"
-        ],
-        [
-          "Prothrombin thrombophilia",
-          "exams and tests"
-        ]
-      ],
-      "why": "wrong topic"
-    },
-    {
-      "variant": "paraphrase",
-      "query": "Battaglia-Neri syndrome clinical presentation",
-      "section": "symptoms",
-      "gold_topic": "Battaglia-Neri syndrome",
-      "top3": [
-        [
-          "Neuroblastoma",
-          "symptoms"
-        ],
-        [
-          "Nicolaides-Baraitser syndrome",
-          "symptoms"
-        ],
-        [
-          "Beare-Stevenson cutis gyrata syndrome",
-          "symptoms"
         ]
       ],
       "why": "wrong topic"

@@ -19,7 +19,7 @@ Title card: **SafeHarbor-RAG: Privacy-First Clinical Retrieval for Yankee AI on 
 ## PART 1: The Vector Database (0:40 – 5:00)
 
 **1. Data (0:40 – 1:30).** Show `results/` and the architecture diagram (`docs/architecture.md`).
-- Public knowledge: MedQuAD, 16,407 NIH Q&A pairs from 12 NIH sites. After deduplication there are 15,798 unique documents.
+- Public knowledge: MedQuAD, 16,407 NIH Q&A pairs from 12 NIH sites. After topic-aware deduplication there are 16,346 documents and 36,466 chunks.
 - Private data: 300 synthetic clinical notes with realistic PHI. They stand in for an EHR export.
 - Two collections: `medical_kb` and `patient_notes`.
 
@@ -35,11 +35,13 @@ Show `results/privacy_audit.json`: **0 leaked identifiers**.
 - Each chunk gets a contextual header: "Cystic Fibrosis | inheritance: …". Call out the recall gain from the header in the table.
 - Point to the naive 1000-character baseline row.
 
-**4. Embedding model selection (3:10 – 3:50).** Show `results/embedding_benchmark.md`. Four CPU models were compared, and bge-small-en-v1.5 was chosen. Give the reason using the numbers.
+**4. Embedding model selection (3:10 – 3:50).** Show `results/embedding_benchmark.md`. Four CPU models were compared, and e5-small-v2 was chosen: +11 points of R@1 over MiniLM.
+
+**4b. The bug we found (30 s, judges love this).** Show `results/full_index_eval_v1_answer_dedup.md`. Deduplicating on answer text alone mislabelled the shared NIH boilerplate. Fixing it moved R@10 from 0.950 to 0.998.
 
 **5. Hybrid retrieval + HNSW tuning (3:50 – 5:00).** Show `results/retrieval_modes.md` and `results/hnsw_benchmark.md`.
-- BM25 catches gene symbols and drug names. Dense retrieval catches paraphrases. RRF fusion beats both.
-- HNSW sweep over M and ef_search: recall against exact search vs latency. Explain the chosen operating point.
+- Negative result: equal-weight RRF hybrid *loses* 8 points. The section router is the winner: dense + router reaches R@1 0.964.
+- HNSW: synthetic benchmarks said 0.994 recall, but real questions got only 0.952. Tuning on real queries gives M=64, ef=512: 0.992 recall and 0 top-1 misses in about 2 ms.
 
 ---
 

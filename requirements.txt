@@ -1,6 +1,6 @@
 # CPU-only torch keeps the install small and fully local:
 #   pip install torch --index-url https://download.pytorch.org/whl/cpu
-chromadb>=1.0,<2
+chromadb>=1.5,<2   # HNSW behaviour notes in WRITEUP measured on 1.5.x
 sentence-transformers>=3.0
 rank-bm25>=0.2.2
 datasets>=2.18
@@ -8,5 +8,5 @@ fastapi>=0.110
 uvicorn>=0.29
 pyyaml>=6.0
 tqdm>=4.66
-mcp>=1.2
+mcp>=1.2,<2        # server uses the v1 FastMCP API (renamed in mcp 2.x)
 pytest>=8.0

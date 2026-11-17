@@ -17,9 +17,11 @@ chunking:
 
 hnsw:
   space: cosine
-  max_neighbors: 32    # "M"
-  ef_construction: 200
-  ef_search: 512      # real-question ANN recall@10 0.975, top-1 lost 1/1000, ~2.3 ms (results/hnsw_benchmark.md)
+  # Chosen from results/hnsw_benchmark.md using REAL question embeddings (not perturbed vectors):
+  # recall@10 0.992 vs exact search, 0/1000 queries lose their true top-1, p50 2.1 ms.
+  max_neighbors: 64    # "M"
+  ef_construction: 400
+  ef_search: 512
 
 retrieval:
   mode: dense          # dense | bm25 | hybrid  (dense + section router won experiment C)

@@ -5,6 +5,15 @@ Our submission to the ISODS 6th World Championship in Data Science & AI (2026/27
 
 The repo is a fully local retrieval layer that lets an agent reason over two sources at once: public medical knowledge (NIH / MedQuAD) and private clinical notes. Identifiers are removed **before** anything is embedded. At query time the process runs with outbound networking physically disabled.
 
+**Results on the full 36,466-chunk index** (e5-small-v2, dense + section router, HNSW M=64, all on a CPU, airgapped):
+
+| | recall@1 | recall@10 | MRR@10 | tool-call p50 |
+|---|---|---|---|---|
+| NIH questions | 0.932 | 0.998 | 0.961 | ≈ 24 ms |
+| paraphrased questions | 0.876 | 0.996 | 0.925 | ≈ 23 ms |
+
+The privacy audit found **0 / 2,099** PHI identifiers in the vector DB, outbound networking was blocked, and all **300/300** notes re-identified exactly from the local vault.
+
 - Research writeup: [`WRITEUP.md`](WRITEUP.md)
 - Architecture and privacy invariants: [`docs/architecture.md`](docs/architecture.md)
 - Benchmark tables: [`results/`](results/)
@@ -56,6 +65,8 @@ scripts/
   benchmark.py         A: embedding models, B: chunking, C: retrieval modes
   benchmark_hnsw.py    D: HNSW M / ef_construction / ef_search sweep vs exact search
   audit_privacy.py     E: PHI leakage, egress, re-identification audit
+  evaluate_full.py     F: end-to-end eval on the full index + failure analysis
+  compact_db.py        rebuild HNSW graph from stored vectors / reclaim disk
   export_db.sh         package DB + data for Kaggle / Hugging Face
 server/   mcp_server.py, http_tool_server.py
 agent/    local_agent.py
@@ -68,6 +79,8 @@ tests/    privacy, chunking, end-to-end retrieval
 python scripts/benchmark.py --docs 6000 --queries 500   # A, B, C -> results/*.md
 python scripts/benchmark_hnsw.py --queries 300          # D       -> results/hnsw_benchmark.md
 python scripts/audit_privacy.py                         # E       -> results/privacy_audit.json
+python scripts/evaluate_full.py                         # F       -> results/full_index_eval.md
+python scripts/compact_db.py      # rebuild HNSW with current config.yaml params, no re-embedding
 ```
 
 All randomness is seeded. Each benchmark runs on a CPU-only machine.

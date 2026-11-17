@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """Copy the live collections into a fresh Chroma directory (drops orphaned segments and
-dead SQLite pages), then swap it in. Vectors are copied as-is, so no re-embedding.
+dead SQLite pages) and rebuild the HNSW graph with the *current* config.yaml parameters, then
+swap it in. Vectors are copied as-is, so changing M / ef_construction needs no re-embedding.
 
     python scripts/compact_db.py
 """
@@ -29,6 +30,9 @@ for col in src.list_collections():
     assert new.count() == col.count(), col.name
     print(f"{col.name}: {new.count()} rows copied")
 shutil.copy(src_dir / "manifest.json", dst_dir / "manifest.json")
+_m = json.loads((dst_dir / "manifest.json").read_text())
+_m["hnsw"] = cfg["hnsw"]  # the graph was rebuilt with the current config
+(dst_dir / "manifest.json").write_text(json.dumps(_m, indent=2))
 del src, dst
 backup = src_dir.with_name(src_dir.name + "_old")
 shutil.rmtree(backup, ignore_errors=True)
