@@ -18,6 +18,9 @@ The privacy audit found **0 / 2,099** PHI identifiers in the vector DB, outbound
 - Architecture and privacy invariants: [`docs/architecture.md`](docs/architecture.md)
 - Benchmark tables: [`results/`](results/)
 - Video script: [`docs/VIDEO_SCRIPT.md`](docs/VIDEO_SCRIPT.md)
+- Figures (cover, architecture, benchmarks): [`docs/figures/`](docs/figures/) · submission checklist: [`docs/SUBMISSION_CHECKLIST.md`](docs/SUBMISSION_CHECKLIST.md)
+
+![Architecture](docs/figures/architecture.png)
 
 ## Quick start (CPU laptop, ~15 min for the full build)
 

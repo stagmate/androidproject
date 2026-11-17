@@ -10,3 +10,4 @@ pyyaml>=6.0
 tqdm>=4.66
 mcp>=1.2,<2        # server uses the v1 FastMCP API (renamed in mcp 2.x)
 pytest>=8.0
+matplotlib>=3.8      # figures only (scripts/make_figures.py)

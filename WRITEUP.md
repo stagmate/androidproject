@@ -2,8 +2,16 @@
 ### Privacy-first clinical retrieval for Yankee AI: a de-identified, airgapped Chroma DB that lets a local agent reason over patient notes and NIH medical knowledge together
 
 **Track:** Healthcare & Life Sciences
-**Team:** _<name 1 — affiliation/status>_, _<name 2>_, _<name 3>_
-**Links:** Code: _<GitHub URL>_ · Vector DB + data: _<Kaggle / Hugging Face URL>_ · Video: _<YouTube URL>_
+
+**Team**
+| Member | Status (high school / university / professional ≤ 5 yrs from graduation) | Contribution |
+|---|---|---|
+| _<name>_ | _<status, institution>_ | _<e.g. data pipeline, privacy layer, evaluation>_ |
+| _<name>_ | _<status, institution>_ | _<…>_ |
+
+**Links:** Code: https://github.com/stagmate/androidproject · Vector DB + data: _<Kaggle / Hugging Face URL>_ · Video: _<YouTube URL>_
+
+![SafeHarbor-RAG](docs/figures/cover.png)
 
 ---
 
@@ -57,7 +65,9 @@ SafeHarbor-RAG enforces four invariants in code and verifies each one with tests
 
 **Deduplication lesson (finding 4).** We first merged documents with identical answer text. That looked harmless, but NIH reuses some paragraphs *verbatim across diseases*: the generic autosomal-recessive inheritance text appears under hundreds of conditions. Merging those kept only the *first* disease's label, which erased 548 disease-specific documents. Every other condition's "Is X inherited?" question became unanswerable, which produced a hard recall@10 ceiling of about 0.95–0.96 that every embedding model hit identically.
 
-The failure analysis exposed it: all 25 canonical misses at k = 10 pointed at a chunk labelled "Nijmegen breakage syndrome" (`results/full_index_eval_v1_answer_dedup.md`). Deduplicating on **(topic, answer)** fixed it. Full-index R@10 went from 0.950 to 0.998 and R@1 from 0.884 to 0.932. All tables below use the corrected data.
+The failure analysis on the full index exposed it. The 25 canonical misses at k = 10 were dominated by questions whose only gold document carried another disease's label. For example, "Is mevalonate kinase deficiency inherited?" had its answer filed under "Nijmegen breakage syndrome" (`results/full_index_eval_v1_answer_dedup.md`). Deduplicating on **(topic, answer)** fixed it. Full-index R@10 went from 0.950 to 0.998 and R@1 from 0.884 to 0.932. All tables below use the corrected data.
+
+![The deduplication fix](docs/figures/fig_dedup_fix.png)
 
 **Why synthetic notes?** Real notes cannot be published, and the competition requires a public dataset. The generator produces realistic structure (demographics block, history, medications, findings, plan, emergency contact), so the redaction path is exercised end to end. Because the ground-truth PHI is known exactly, the leakage audit is exact too.
 
@@ -89,6 +99,8 @@ The leakage audit searches for every one of the 2,099 unique ground-truth identi
 | 192 tok, overlap 0, header | 12,721 | 0.922 | 0.888 | 0.998 |
 | 384 tok, overlap 1, header | 8,080 | 0.908 | 0.880 | 0.998 |
 
+![Chunking ablation](docs/figures/fig_chunking.png)
+
 **Finding 1: the contextual header is the largest single lever in the pipeline, worth +15 to +16 points of R@1.** A chunk reading *"This condition is inherited in an autosomal recessive pattern"* is identical across hundreds of diseases. Only the header disambiguates it.
 
 Chunk size between 96 and 384 tokens matters much less: all configurations sit within about ±2 points, which is close to noise at n = 500 (SE ≈ 1.2 pt). 96 tokens needs 2.3× as many vectors for no gain. Sentence overlap is also within noise. We keep one sentence of overlap because it protects multi-sentence instructions (a dose followed by its contraindication), which this benchmark doesn't measure.
@@ -119,12 +131,14 @@ After the header fix, the hard part of MedQuAD isn't finding the right *disease*
 | Hybrid (BM25 weight 0.3) + router | 0.954 | 0.928 | 0.969 | 19.5 ms |
 | **Dense + router (default)** | **0.964** | **0.932** | **0.978** | **7.0 ms** |
 
+![Retrieval modes](docs/figures/fig_retrieval_modes.png)
+
 **Finding 2, a negative result:** textbook equal-weight Reciprocal Rank Fusion *hurts*. It loses 8 points against dense alone, because BM25 is a much weaker ranker here and RRF gives it an equal vote. Down-weighting BM25 recovers most of the loss, but never beats dense.
 
 **Finding 3:** the router adds **+4.8 to +6.4 points** of R@1 at negligible cost. Dense + router is best on both query sets at a third of hybrid's latency, so it is the production default. Weighted hybrid remains available to the agent as an opt-in `exact_terms=true` flag for queries that hinge on literal tokens (gene symbols, drug codes).
 
 ### 3.5 HNSW tuning in Chroma, on real queries (finding 5)
-The usual way to benchmark an ANN index is to perturb in-corpus vectors and compare against exact search. We did that first. It reported **0.994** recall@10 at our original setting (M = 32, ef_search = 128).
+The usual way to benchmark an ANN index is to perturb in-corpus vectors and compare against exact search. We did that first, and it looked fine: **0.987** recall@10 at our original setting (M = 32, ef_construction = 200, ef_search = 128), rising to 0.998 at ef_search = 512.
 
 Then the failure analysis showed true nearest neighbours being skipped. The 1,000 **real question embeddings** land *between* MedQuAD's tight clusters of near-duplicate NIH boilerplate, where greedy HNSW search stalls. On those queries the same index reaches only **0.952**, and 16 questions lose their true top-1. We rebuilt the sweep to report both query sets (`results/hnsw_benchmark.md`; 36,466 × 384 vectors; each point is a fresh build):
 
@@ -137,6 +151,8 @@ Then the failure analysis showed true nearest neighbours being skipped. The 1,00
 | 64 | 400 | 256 | 0.997 | 0.988 | 1 | 1.73 ms |
 | **64** | **400** | **512** | 0.999 | **0.992** | **0** | **2.13 ms** |
 | exact (numpy brute force) | – | – | 1 | 1 | 0 | 0.64 ms |
+
+![HNSW recall on synthetic vs real queries](docs/figures/fig_hnsw.png)
 
 **Production setting:** `max_neighbors (M) = 64`, `ef_construction = 400`, `ef_search = 512`. It never loses the true top-1 on our 1,000 real queries, at about 2 ms. Changing M means rebuilding the graph, but not re-embedding: `scripts/compact_db.py` rebuilds the index from the stored vectors in about a minute.
 
@@ -156,10 +172,12 @@ Engineering notes from the sweep:
 | On disk | 289 MB (vectors + HNSW + documents + metadata) |
 | **End-to-end eval, canonical** (500 Q, production tool path, airgapped) | **R@1 0.932 · R@5 0.996 · R@10 0.998 · MRR 0.961** |
 | **End-to-end eval, paraphrase** | **R@1 0.876 · R@5 0.984 · R@10 0.996 · MRR 0.925** |
-| Tool-call latency | p50 ≈ 24 ms, p95 ≈ 29 ms (query embedding dominates; ANN ≈ 2 ms) |
+| Tool-call latency | p50 ≈ 24 ms, p95 ≈ 29 ms. Breakdown: query embedding ≈ 14 ms; Chroma returning 50 candidates with metadata ≈ 7 ms, of which the ANN search is ≈ 3 ms; router + formatting the rest |
 | Remaining misses at k = 10 | 1 / 500 canonical, 2 / 500 paraphrase |
 
 ## 4. Yankee AI integration
+
+![Architecture](docs/figures/architecture.png)
 
 ```
 Yankee AI agent (local LLM)
@@ -209,6 +227,7 @@ Every tool call completes in tens of milliseconds, with the network refused. `ag
 - **The section router is regex-based.** It covers the 15 MedQuAD sections in English. A learned intent classifier would generalise better to other corpora.
 - **Redaction is rule-based.** It reaches 0 leaks on synthetic notes whose PHI formats we know. Real notes have more variety: nicknames, free-text dates, rare names without cues. In production we would add a local de-identification NER model and keep the audit as a regression gate.
 - **Synthetic notes** test the privacy pipeline, not clinical retrieval quality on real EHR text.
+- **Latency headroom left on the table.** About 4 ms per call could be saved by caching candidate metadata in memory (measured: Chroma returns 50 candidates in 2.8 ms with distances only, versus 7.0 ms with metadata). It wasn't worth the risk this late.
 - **Single machine, single runs.** Benchmarks ran on a 4-core cloud VM. Latency includes noise from co-running jobs, and HNSW builds are non-deterministic (§3.5).
 
 ## 7. Impact beyond healthcare
